@@ -1,0 +1,25 @@
+@import "base/reset";
+
+#container {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+
+.btns {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  display: flex;
+  .btn {
+    margin-right: 30px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    cursor: pointer;;
+  }
+}
+
