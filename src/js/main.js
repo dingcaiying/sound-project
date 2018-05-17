@@ -14,10 +14,7 @@ const musicUrls = [
 ];
 
 let sound;
-let analyser, freqByteData;
 let panner;
-let rad = 0;
-let waveDataType = 'freq';
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 initSound()
@@ -28,9 +25,7 @@ function initSound(url = musicUrls[0]) {
     sound = new Sound(audioCtx, buffer);
 
     // panner = audioCtx.createPanner();
-
-    // sound.setOutput(panner);
-    // panner.connect(analyser);
+    // panner.connect(audioCtx.destination);
 
     sound.play();
   });

@@ -16,22 +16,17 @@ class Sound {
     this.source.buffer = this.buffer;
     this.source.loop = false;
     this.gainNode = this.context.createGain();
+    this.gainNode.gain.value = 0;
     this.source.connect(this.gainNode);
-    this.gainNode.connect(this.destinationNode);
   }
 
-  // setOutput(node) {
-  //   if (node) {
-  //     this.destinationNode = node;
-  //     this.destinationNode.connet(context.destination);
-  //   } else {
-  //     this.destinationNode = context.destination;
-  //   }
-  // }
-  connect(node) {}
+  setOutput(node) {
+    this.destinationNode = node;
+  }
 
   play() {
     this.setup();
+    this.gainNode.connect(this.destinationNode);
     this.source.start();
   }  
 
