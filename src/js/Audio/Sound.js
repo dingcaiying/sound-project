@@ -2,7 +2,8 @@
 
 class Sound {
 
-  constructor(context, buffer) {
+  // options: { destinationNode }
+  constructor(context, buffer, options = {}) {
     this.context = context;
     this.buffer = buffer;
     this.source = null;
@@ -13,18 +14,24 @@ class Sound {
   setup() {
     this.source = this.context.createBufferSource();
     this.source.buffer = this.buffer;
-    this.source.loop = true;
+    this.source.loop = false;
     this.gainNode = this.context.createGain();
     this.source.connect(this.gainNode);
+    this.gainNode.connect(this.destinationNode);
   }
 
-  setOutput(node) {
-    this.destinationNode = node;
-  }
+  // setOutput(node) {
+  //   if (node) {
+  //     this.destinationNode = node;
+  //     this.destinationNode.connet(context.destination);
+  //   } else {
+  //     this.destinationNode = context.destination;
+  //   }
+  // }
+  connect(node) {}
 
   play() {
     this.setup();
-    this.gainNode.connect(this.destinationNode);
     this.source.start();
   }  
 
