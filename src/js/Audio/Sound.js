@@ -2,13 +2,13 @@
 
 class Sound {
 
-  // options: { destinationNode }
   constructor(context, buffer, options = {}) {
     this.context = context;
     this.buffer = buffer;
     this.source = null;
     this.gainNode = null;
     this.destinationNode = context.destination;
+    this.isPlaying = false;
   }
 
   setup() {
@@ -16,8 +16,10 @@ class Sound {
     this.source.buffer = this.buffer;
     this.source.loop = false;
     this.gainNode = this.context.createGain();
-    this.gainNode.gain.value = 0;
+    // this.gainNode.gain.value = 0;
     this.source.connect(this.gainNode);
+
+    this.bindEvent();
   }
 
   setOutput(node) {
@@ -28,11 +30,20 @@ class Sound {
     this.setup();
     this.gainNode.connect(this.destinationNode);
     this.source.start();
-  }  
+    this.isPlaying = true;
+  }
 
   stop() {
     this.gainNode.gain.exponentialRampToValueAtTime(0.001, this.context.currentTime + 0.5);
     this.source.stop(this.context.currentTime + 0.5);
+    this.isPlaying = false;
+  }
+
+  bindEvent() {
+    this.source.onended = () => {
+      console.log('ended');
+      this.isPlaying = false;
+    };
   }
 
 }

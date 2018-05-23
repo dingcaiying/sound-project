@@ -22,22 +22,23 @@ class MyRecorder {
   startRecording() {
     if (this.isRecording) return Promise.resolve(); // if isRecording return directly
     return this.recorder.start()
-      .then(() => this.isRecording = true));
+      .then(() => this.isRecording = true);
   }
 
   stopRecording() {
     if (!this.isRecording) return Promise.resolve(); // if !isRecording return directly
-    return recorder.stop()
+    return this.recorder.stop()
       .then(({blob, buffer}) => {
         this.isRecording = false;
         this.blob = blob;
         this.buffer = buffer;
-      }));
+        return Promise.resolve(buffer);
+      });
   }
 
   download() {
     if (this.blob) {
-      Recorder.download(this.blob, 'my recorded audio');
+      this.recorder.download(this.blob, 'my recorded audio');
     } else {
       throw new Error('no blob');
     }

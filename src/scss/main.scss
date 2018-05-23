@@ -8,6 +8,18 @@
   right: 0;
 }
 
+.btn {
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+  cursor: pointer;;
+}
+
+.btn[disabled] {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
 
 .btns {
   position: absolute;
@@ -16,10 +28,5 @@
   display: flex;
   .btn {
     margin-right: 30px;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 5px;
-    cursor: pointer;;
   }
 }
-
