@@ -13,6 +13,8 @@ class App {
       stop: document.getElementById('btn_stop_record'),
       play: document.getElementById('btn_play_record'),
     };
+    this.rad = 0;
+    this.initWithSampleSound = this.initWithSampleSound.bind(this);
   }
 
   init() {
@@ -24,6 +26,46 @@ class App {
       })
       .catch(err => console.log('Uh oh... unable to get stream...', err));
     this.bindEvent();
+  }
+
+  initWithSampleSound() {
+    Promise.all([loadSound(this.audioCtx), loadSound(this.audioCtx, '/assets/music/juanji-shandong.wav')]).then(([buffer, cBuffer]) => {
+      console.log('buffer', buffer);
+      const sound = new Sound(this.audioCtx, buffer);
+      // lowpass filter
+      // const destLowpassNode = this.audioCtx.createBiquadFilter();
+      // destLowpassNode.type = 'lowpass';
+      // destLowpassNode.frequency.value = 880;
+      // destLowpassNode.Q.value = 0.7;
+      // sound.setOutput(destLowpassNode);
+      // destLowpassNode.connect(this.audioCtx.destination);
+      // lowpass end
+
+      // convolver / 卷积
+      // loadSound(this.audioCtx, '/assets/music/juanji-shandong.wav').then(cBuffer => {
+      //   const convolverNode = this.audioCtx.createConvolver();
+      //   convolverNode.buffer = cBuffer;
+      //   sound.setOutput(convolverNode);
+      //   convolverNode.connect(this.audioCtx.destination);
+      // });
+      // convolver / 卷积 end
+
+      const btnFilter = document.getElementById('btn_filter');
+      btnFilter.addEventListener('click', () => {
+        if (sound.isPlaing) sound.stop();
+        btnFilter.classList.toggle('selected');
+        if (!btnFilter.classList.contains('selected')) {
+          sound.setOutput(this.audioCtx.destination);
+        } else {
+          const convolverNode = this.audioCtx.createConvolver();
+          convolverNode.buffer = cBuffer;
+          sound.setOutput(convolverNode);
+          convolverNode.connect(this.audioCtx.destination);
+        }
+        sound.play();
+      });
+      // sound.play();
+    });
   }
 
   bindEvent() {

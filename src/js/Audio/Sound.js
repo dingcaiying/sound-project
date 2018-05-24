@@ -26,6 +26,8 @@ class Sound {
     this.destinationNode = node;
   }
 
+  applyPattern() {}
+
   play() {
     this.setup();
     this.gainNode.connect(this.destinationNode);

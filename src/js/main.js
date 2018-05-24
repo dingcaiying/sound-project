@@ -8,4 +8,6 @@ requireAll(require.context('../assets/', true));
 
 const app = new App();
 
-app.init();
+// app.init();
+
+app.initWithSampleSound();

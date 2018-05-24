@@ -1,18 +1,21 @@
 @import "base/reset";
 
-#container {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
+// #container {
+//   position: fixed;
+//   top: 0;
+//   bottom: 0;
+//   left: 0;
+//   right: 0;
+// }
 
 .btn {
   padding: 10px;
   background-color: #fff;
   border-radius: 5px;
-  cursor: pointer;;
+  cursor: pointer;
+  &.selected {
+    background-color: gold;
+  }
 }
 
 .btn[disabled] {
@@ -22,9 +25,7 @@
 
 
 .btns {
-  position: absolute;
-  top: 15px;
-  left: 15px;
+  margin: 30px;
   display: flex;
   .btn {
     margin-right: 30px;

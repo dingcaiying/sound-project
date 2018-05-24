@@ -1,7 +1,7 @@
 const musicUrls = [
-  './assets/music/35.2.7.mp3',
-  './assets/music/35.2.6.mp3',
-  './assets/music/35.1.8.mp3',
+  '/assets/music/35.2.7.mp3',
+  '/assets/music/35.2.6.mp3',
+  '/assets/music/35.1.8.mp3',
 ];
 
 const loadSound = (audioCtx, url = musicUrls[0]) => {
