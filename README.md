@@ -6,9 +6,6 @@ First `npm install`. Dev mode: `npm run dev`. To build static package: `npm run 
 
 
 
-![hh](./doc/needs1.jpg)
-
-
 ### Reference
 * https://www.transparentcorp.com/products/np/tutorials/WorkingWithRecordings/index.html
 * https://www.youtube.com/watch?v=zrR3reCq564
