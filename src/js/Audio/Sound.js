@@ -10,6 +10,7 @@ class Sound {
     this.destinationNode = context.destination;
     this.isPlaying = false;
     this.onended = options.onended;
+    this.playButton = options.button;
   }
 
   setup() {
@@ -34,18 +35,20 @@ class Sound {
     this.gainNode.connect(this.destinationNode);
     this.source.start();
     this.isPlaying = true;
+    this.playButton && this.playButton.classList.add('playing');
   }
 
   stop() {
     this.gainNode.gain.exponentialRampToValueAtTime(0.001, this.context.currentTime + 0.5);
     this.source.stop(this.context.currentTime + 0.5);
     this.isPlaying = false;
+    this.playButton && this.playButton.classList.remove('playing');
   }
 
   bindEvent() {
     this.source.onended = () => {
-      console.log('ended');
       this.isPlaying = false;
+      this.playButton && this.playButton.classList.remove('playing');
       if (this.onended) this.onended() ;
     };
   }

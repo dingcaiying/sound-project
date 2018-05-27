@@ -21,7 +21,6 @@ class App {
     };
     this.bufferList = {}; // index by timestamp
     window.bufferList = this.bufferList;
-    this.onendedCallback = this.onendedCallback.bind(this);
   }
 
   init() {
@@ -97,7 +96,13 @@ class App {
           const id = String((new Date()).getTime());
           this.bufferList[id] = newBuffer;
           this.current.id = id;
-          this.enableButton(['playRaw', 'playFiltered']);
+          this.enableButton(['playRaw', 'playFiltered', 'startRecord']);
+
+          // append audio to list
+          document.getElementById('audio_list').innerHTML = '' +
+            Object.keys(this.bufferList).map(k => `<li data-id=${k}>${k}<span class="select">select</span><span class="delete">delete</span></li>`).join('');
+          
+          this.setSelectedDomLi(id);
         });
     });
 
@@ -107,21 +112,17 @@ class App {
       // check curent sound type and switch
       if (this.current.type === 'filtered' && this.current.filteredSound) {
         this.current.filteredSound.stop();
-        delete this.current.filteredSound;
         this.current.filteredSound = null;
-        playFiltered.classList.remove('playing');
       }
       this.current.type = 'raw';
-      this.current.rawSound = this.current.rawSound || new Sound(this.audioCtx, buffer, { onended: this.onendedCallback });
+      this.current.rawSound = this.current.rawSound || new Sound(this.audioCtx, buffer, { button: playRaw });
 
       const { rawSound } = this.current;
       if (!rawSound.isPlaying) {
         rawSound.play();
-        playRaw.classList.add('playing');
       }
       else {
         rawSound.stop();
-        playRaw.classList.remove('playing');
       }
     });
 
@@ -131,9 +132,7 @@ class App {
       // check curent sound type and switch
       if (this.current.type === 'raw' && this.current.rawSound) {
         this.current.rawSound.stop();
-        delete this.current.rawSound;
         this.current.rawSound = null;
-        playRaw.classList.remove('playing');
       }
       this.current.type = 'filtered';
 
@@ -142,7 +141,7 @@ class App {
         loadSound(this.audioCtx, '/assets/music/juanji-shandong.wav')
           .then(cBuffer => {
             playFiltered.classList.remove('loading');
-            this.current.filteredSound = new Sound(this.audioCtx, buffer, { onended: this.onendedCallback });
+            this.current.filteredSound = new Sound(this.audioCtx, buffer, { button: playFiltered });
 
             const convolverNode = this.audioCtx.createConvolver();
             convolverNode.buffer = cBuffer;
@@ -150,22 +149,50 @@ class App {
             convolverNode.connect(this.audioCtx.destination);
 
             this.current.filteredSound.play();
-            playFiltered.classList.add('playing');
           });
       } else if (!this.current.filteredSound.isPlaying) {
         this.current.filteredSound.play();
-        playFiltered.classList.add('playing');
       } else {
         this.current.filteredSound.stop();
-        playFiltered.classList.remove('playing');
+      }
+    });
+
+    document.getElementById('audio_list').addEventListener('click', e => {
+      const target = e.target;
+      if (target.classList.contains('select')) {
+        const id = target.parentNode.getAttribute('data-id');
+        if (this.current.id !== id) {
+          this.current.id = id;
+          this.current.rawSound && this.current.rawSound.stop();
+          this.current.rawSound = null;
+          this.current.filteredSound && this.current.filteredSound.stop();
+          this.current.filteredSound = null;
+          this.setSelectedDomLi(id);
+        }
+      }
+      else if (target.classList.contains('delete')) {
+        const id = target.parentNode.getAttribute('data-id');
+        target.parentNode.parentNode.removeChild(target.parentNode);
+        delete this.bufferList[id];
+        if (this.current.id === id) {
+          this.current.id = null;
+          this.current.rawSound && this.current.rawSound.stop();
+          this.current.rawSound = null;
+          this.current.filteredSound && this.current.filteredSound.stop();
+          this.current.filteredSound = null;
+        }
+        if (Object.keys(this.bufferList).length === 0) {
+          this.enableButton('startRecord');
+        }
       }
     });
   }
 
-  onendedCallback() {
-    // const { playRaw, playFiltered } = this.buttons;
-    // playRaw.classList.remove('playing');
-    // playFiltered.classList.remove('playing');
+  setSelectedDomLi(id) {
+    Array.from(document.getElementById('audio_list').querySelectorAll('li')).forEach(el => {
+      if (el.getAttribute('data-id') !== id) el.classList.remove('selected');
+      else el.classList.add('selected');
+    });
   }
 
   disableButtons() {
