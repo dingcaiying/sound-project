@@ -81,6 +81,12 @@ class App {
   bindEvent() {
     const { startRecord, stopRecord, playRaw, playFiltered } = this.buttons;
     startRecord.addEventListener('click', () => {
+      this.current.id = null;
+      this.current.rawSound && this.current.rawSound.stop();
+      this.current.rawSound = null;
+      this.current.filteredSound && this.current.filteredSound.stop();
+      this.current.filteredSound = null;
+      this.setSelectedDomLi(null);
       this.myReco.startRecording()
         .then(() => {
           this.enableButton('stopRecord');
