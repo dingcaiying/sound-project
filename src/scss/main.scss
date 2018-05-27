@@ -13,8 +13,11 @@
   background-color: #fff;
   border-radius: 5px;
   cursor: pointer;
-  &.selected {
+  &.playing {
     background-color: gold;
+    &:after {
+      content: ' (playing)';
+    }
   }
 }
 

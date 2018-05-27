@@ -9,6 +9,7 @@ class Sound {
     this.gainNode = null;
     this.destinationNode = context.destination;
     this.isPlaying = false;
+    this.onended = options.onended;
   }
 
   setup() {
@@ -45,6 +46,7 @@ class Sound {
     this.source.onended = () => {
       console.log('ended');
       this.isPlaying = false;
+      if (this.onended) this.onended() ;
     };
   }
 
