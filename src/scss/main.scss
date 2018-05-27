@@ -19,6 +19,12 @@
       content: ' (playing)';
     }
   }
+  &.loading {
+    &:after {
+      content: ' (loading)';
+      color: #333;
+    }
+  }
 }
 
 .btn[disabled] {

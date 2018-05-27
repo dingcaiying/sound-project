@@ -28,7 +28,7 @@ class App {
     navigator.mediaDevices.getUserMedia({audio: true})
       .then((stream) => {
         this.myReco = new MyRecorder(this.audioCtx, stream);
-        return loadSound(this.audioCtx, '/assets/music/juanji-shandong.wav'); // load filter wave
+        return Promise.resolve(); // or preload filter wave
       }, (err) => {
         console.log('Uh oh... unable to get stream...', err)
       })
@@ -144,13 +144,13 @@ class App {
 
       if (!this.current.filteredSound) {
         playFiltered.classList.add('loading');
-        loadSound(this.audioCtx, '/assets/music/juanji-shandong.wav')
-          .then(cBuffer => {
+        Promise.all([loadSound(this.audioCtx, '/assets/music/juanji-shandong.wav')])
+          .then(cBuffers => {
             playFiltered.classList.remove('loading');
             this.current.filteredSound = new Sound(this.audioCtx, buffer, { button: playFiltered });
 
             const convolverNode = this.audioCtx.createConvolver();
-            convolverNode.buffer = cBuffer;
+            convolverNode.buffer = cBuffers[0];
             this.current.filteredSound.setOutput(convolverNode);
             convolverNode.connect(this.audioCtx.destination);
 
