@@ -16,7 +16,7 @@ class Sound {
   setup() {
     this.source = this.context.createBufferSource();
     this.source.buffer = this.buffer;
-    this.source.loop = false;
+    this.source.loop = true;
     this.gainNode = this.context.createGain();
     // this.gainNode.gain.value = 0;
     this.source.connect(this.gainNode);
