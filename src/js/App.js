@@ -147,7 +147,7 @@ class App {
         Promise.all([loadSound(this.audioCtx, '/assets/music/juanji-shandong.wav')])
           .then(cBuffers => {
             playFiltered.classList.remove('loading');
-            this.current.filteredSound = new Sound(this.audioCtx, buffer, { button: playFiltered });
+            this.current.filteredSound = new Sound(this.audioCtx, buffer, { button: playFiltered, playbackRate: 0.5 });
 
             const convolverNode = this.audioCtx.createConvolver();
             convolverNode.buffer = cBuffers[0];

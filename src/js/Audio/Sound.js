@@ -11,12 +11,21 @@ class Sound {
     this.isPlaying = false;
     this.onended = options.onended;
     this.playButton = options.button;
+    // source properies
+    this.sourcePropperties = {};
+    if (typeof options.playbackRate === 'number') {
+      this.sourcePropperties.playbackRate =  options.playbackRate;
+    }
   }
 
   setup() {
     this.source = this.context.createBufferSource();
     this.source.buffer = this.buffer;
     this.source.loop = true;
+    Object.keys(this.sourcePropperties).forEach(k => {
+      this.source[k].value = this.sourcePropperties[k];
+    });
+
     this.gainNode = this.context.createGain();
     // this.gainNode.gain.value = 0;
     this.source.connect(this.gainNode);
