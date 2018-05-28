@@ -21,6 +21,8 @@ class App {
     };
     this.bufferList = {}; // index by timestamp
     window.bufferList = this.bufferList;
+
+    this.bgSound = null;
   }
 
   init() {
@@ -28,11 +30,12 @@ class App {
     navigator.mediaDevices.getUserMedia({audio: true})
       .then((stream) => {
         this.myReco = new MyRecorder(this.audioCtx, stream);
-        return Promise.resolve(); // or preload filter wave
+        return loadSound(this.audioCtx, '/assets/music/Alpha-Waves-10Hz.wav');
       }, (err) => {
         console.log('Uh oh... unable to get stream...', err)
       })
-      .then(() => {
+      .then((bgBuffer) => {
+        this.bgSound = new Sound(this.audioCtx, bgBuffer);
         this.enableButton('startRecord');
       });
     this.bindEvent();
@@ -147,7 +150,7 @@ class App {
         Promise.all([loadSound(this.audioCtx, '/assets/music/juanji-shandong.wav')])
           .then(cBuffers => {
             playFiltered.classList.remove('loading');
-            this.current.filteredSound = new Sound(this.audioCtx, buffer, { button: playFiltered, playbackRate: 0.5 });
+            this.current.filteredSound = new Sound(this.audioCtx, buffer, { button: playFiltered, playbackRate: 0.5, bgSound: this.bgSound });
 
             const convolverNode = this.audioCtx.createConvolver();
             convolverNode.buffer = cBuffers[0];
