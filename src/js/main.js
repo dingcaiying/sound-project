@@ -10,4 +10,4 @@ const app = new App();
 
 // app.init();
 
-app.initWithSampleSound();
+app.init();
