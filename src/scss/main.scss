@@ -1,4 +1,4 @@
-@import "base/reset";
+@import "bootstrap.scss";
 
 // #container {
 //   position: fixed;
@@ -8,11 +8,20 @@
 //   right: 0;
 // }
 
+#page_container {
+  padding-top: 60px;
+}
+
+.mt-normal {
+  margin-top: 30px;
+}
+
+.mb-normal {
+  margin-bottom: 30px;
+}
+
 .btn {
-  padding: 10px;
-  background-color: #fff;
-  border-radius: 5px;
-  cursor: pointer;
+  margin-right: 30px;
   &.playing {
     background-color: gold;
     &:after {
@@ -33,20 +42,12 @@
 }
 
 
-.btns {
-  margin: 30px;
-  display: flex;
-  .btn {
-    margin-right: 30px;
-  }
-}
-
-
-#audio_list {
-  padding: 10px;
-  span { margin: 10px; }
-}
-
 .selected {
   background-color: gold;
+}
+
+#audio_container {
+  a {
+    display: block;
+  }
 }

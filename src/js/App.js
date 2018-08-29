@@ -44,10 +44,8 @@ class App {
           const resultBlob = this.myReco.blob;
           console.log('resultBlob', resultBlob)
 
-          // generate file 
-          // this.myReco.download();
           const div = createDownloadLink(resultBlob);
-          document.body.appendChild(div);
+          document.getElementById('page_container').appendChild(div);
 
           var filename = new Date().toISOString();
           var xhr = new XMLHttpRequest();
