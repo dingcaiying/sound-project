@@ -1,6 +1,6 @@
 import Sound from './Audio/Sound';
 import MyRecorder from './Audio/MyRecorder';
-import { loadSound } from './utils/helper';
+import { loadSound, createDownloadLink } from './utils/helper';
 
 class App {
 
@@ -30,55 +30,9 @@ class App {
     navigator.mediaDevices.getUserMedia({audio: true})
       .then((stream) => {
         this.myReco = new MyRecorder(this.audioCtx, stream);
-        return loadSound(this.audioCtx, '/assets/music/Alpha-Waves-10Hz.wav');
-      }, (err) => {
-        console.log('Uh oh... unable to get stream...', err)
-      })
-      .then((bgBuffer) => {
-        this.bgSound = new Sound(this.audioCtx, bgBuffer);
         this.enableButton('startRecord');
       });
     this.bindEvent();
-  }
-
-  initWithSampleSound() {
-    loadSound(this.audioCtx).then(([buffer, cBuffer]) => {
-      console.log('buffer', buffer);
-      const sound = new Sound(this.audioCtx, buffer);
-      // lowpass filter
-      // const destLowpassNode = this.audioCtx.createBiquadFilter();
-      // destLowpassNode.type = 'lowpass';
-      // destLowpassNode.frequency.value = 880;
-      // destLowpassNode.Q.value = 0.7;
-      // sound.setOutput(destLowpassNode);
-      // destLowpassNode.connect(this.audioCtx.destination);
-      // lowpass end
-
-      // convolver / 卷积
-      // loadSound(this.audioCtx, '/assets/music/juanji-shandong.wav').then(cBuffer => {
-      //   const convolverNode = this.audioCtx.createConvolver();
-      //   convolverNode.buffer = cBuffer;
-      //   sound.setOutput(convolverNode);
-      //   convolverNode.connect(this.audioCtx.destination);
-      // });
-      // convolver / 卷积 end
-
-      const btnFilter = document.getElementById('btn_filter');
-      btnFilter.addEventListener('click', () => {
-        if (sound.isPlaing) sound.stop();
-        btnFilter.classList.toggle('selected');
-        if (!btnFilter.classList.contains('selected')) {
-          sound.setOutput(this.audioCtx.destination);
-        } else {
-          const convolverNode = this.audioCtx.createConvolver();
-          convolverNode.buffer = cBuffer;
-          sound.setOutput(convolverNode);
-          convolverNode.connect(this.audioCtx.destination);
-        }
-        sound.play();
-      });
-      // sound.play();
-    });
   }
 
   bindEvent() {
@@ -112,6 +66,29 @@ class App {
             Object.keys(this.bufferList).map(k => `<li data-id=${k}>${k}<span class="select">select</span><span class="delete">delete</span></li>`).join('');
           
           this.setSelectedDomLi(id);
+
+
+          // generate file 
+          // this.myReco.download();
+          const div = createDownloadLink(this.myReco.blob);
+          document.body.appendChild(div);
+
+          var filename = new Date().toISOString(); //filename to send to server without extension
+          //upload link
+          
+          var xhr=new XMLHttpRequest();
+          xhr.onload=function(e) {
+              if(this.readyState === 4) {
+                  console.log("Server returned: ",e.target.responseText);
+              }
+          };
+          var fd=new FormData();
+          fd.append("audio_data", this.myReco.blob, filename);
+          console.log('fd', fd);
+          xhr.open("POST","http://10.106.76.109/test.php",true);
+          xhr.send(fd);
+          // li.appendChild(document.createTextNode (" "))//add a space in between
+          // li.appendChild(upload)//add the upload link to li
         });
     });
 

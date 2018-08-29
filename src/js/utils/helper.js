@@ -21,4 +21,29 @@ const loadSound = (audioCtx, url = musicUrls[0]) => {
   });
 };
 
-export { loadSound };
+
+const createDownloadLink = (blob) => {
+ 
+  var url = URL.createObjectURL(blob);
+  var au = document.createElement('audio');
+  var div = document.createElement('div');
+  var link = document.createElement('a');
+
+  //add controls to the <audio> element
+  au.controls = true;
+  au.src = url;
+
+  //link the a element to the blob
+  link.href = url;
+  link.download = new Date().toISOString() + '.wav';
+  link.innerHTML = link.download;
+
+  //add the new audio and a elements to the li element
+  div.appendChild(au);
+  div.appendChild(link);
+
+  //add the li element to the ordered list
+  return div;
+}
+
+export { loadSound, createDownloadLink };

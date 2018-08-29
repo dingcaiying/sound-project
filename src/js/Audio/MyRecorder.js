@@ -1,5 +1,7 @@
 import Recorder from 'recorder-js';
 
+window.Recorder = Recorder;
+
 class MyRecorder {
 
   // audio context; stream from `navigator.mediaDevices.getUserMedia`
@@ -8,6 +10,7 @@ class MyRecorder {
     this.recorder = new Recorder(this.context, {
       // onAnalysed: data => console.log(data),
     });
+    window.recorder = this.recorder;
     this.stream = stream;
     this.isRecording = false;
     this.blob = null;
@@ -38,7 +41,8 @@ class MyRecorder {
 
   download() {
     if (this.blob) {
-      this.recorder.download(this.blob, 'my recorded audio');
+      // this.recorder.download(this.blob, 'my recorded audio');
+      Recorder.download(this.blob, 'recorded-audio');
     } else {
       throw new Error('no blob');
     }
