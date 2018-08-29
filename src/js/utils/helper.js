@@ -23,10 +23,14 @@ const loadSound = (audioCtx, url = musicUrls[0]) => {
 
 
 const createDownloadLink = (blob) => {
- 
+
+  const elemLinkContainer = document.getElementById('audio_container');
+  if (elemLinkContainer) elemLinkContainer.parentNode.removeChild(elemLinkContainer);
+   
   var url = URL.createObjectURL(blob);
-  var au = document.createElement('audio');
   var div = document.createElement('div');
+  div.id = 'audio_container';
+  var au = document.createElement('audio');
   var link = document.createElement('a');
 
   //add controls to the <audio> element
