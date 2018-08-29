@@ -12,6 +12,8 @@ class App {
       // playFiltered: document.getElementById('btn_play_filtered'),
     };
     this.myReco = null;
+
+    this.speechText = '';
   }
 
   init() {
@@ -53,10 +55,14 @@ class App {
             if(this.readyState === 4) {
               console.log("Server returned: ",e.target.responseText);
             }
+            if (this.status === 200 && e.target.responseText) {
+              this.speechText = e.target.responseText;
+              document.getElementById('speech_result').innerHTML = this.speechText;
+            }
           };
           var fd = new FormData();
           fd.append("audio_data", resultBlob, filename);
-          xhr.open("POST","http://10.106.76.109/test.php",true);
+          xhr.open("POST","http://localhost/test.php",true);
           xhr.send(fd);
         });
     });
