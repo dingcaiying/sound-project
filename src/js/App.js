@@ -34,16 +34,19 @@ class App {
     });
     stopRecord.addEventListener('click', () => {
       this.myReco.stopRecording()
-        .then(buffers => {
-          const newBuffer = this.audioCtx.createBuffer(2, buffers[0].length, this.audioCtx.sampleRate);
+        .then((buffers) => {
+          const newBuffer = this.audioCtx.createBuffer(1, buffers[0].length, this.audioCtx.sampleRate);
           newBuffer.getChannelData(0).set(buffers[0]);
-          newBuffer.getChannelData(1).set(buffers[1]);
+          // newBuffer.getChannelData(1).set(buffers[1]);
 
           this.enableButton(['startRecord']);
 
+          const resultBlob = this.myReco.blob;
+          console.log('resultBlob', resultBlob)
+
           // generate file 
           // this.myReco.download();
-          const div = createDownloadLink(this.myReco.blob);
+          const div = createDownloadLink(resultBlob);
           document.body.appendChild(div);
 
           var filename = new Date().toISOString();
@@ -54,7 +57,7 @@ class App {
             }
           };
           var fd = new FormData();
-          fd.append("audio_data", this.myReco.blob, filename);
+          fd.append("audio_data", resultBlob, filename);
           xhr.open("POST","http://10.106.76.109/test.php",true);
           xhr.send(fd);
         });
